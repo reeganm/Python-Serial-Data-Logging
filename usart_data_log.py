@@ -3,35 +3,33 @@
 #it takes care of cleaning out special characters and adding new lines
 #however data must be sent over serial in csv format
 #also I am having issues with encoding special characters so I am only leting
-#CAPITAL letters, numbers, and comma's through
+#CAPITAL letters, numbers, and comma's thru
 import serial
 import sys
 import datetime
 
 now = datetime.datetime.now()
 
-#try: 
-file = open('log' + str(now.year) + '_' + str(now.month) + '_' + str(now.day) + '_' + str(now.hour) + '_' + str(now.minute) + '_' + '.csv','w')
-file.write("New log file" + str(now.isoformat()) + "\n\r")
+try: 
+    file = open('log' + str(now.year) + '_' + str(now.month) + '_' + str(now.day) + '_' + str(now.hour) + '_' + str(now.minute) + '_' + '.csv','w')
+    file.write("New log file" + str(now.isoformat()) + "\n\r")
+    
+    ser = serial.Serial('COM5',115200,timeout=1)
+    
+    accepted_chars = ['1','2','3','4','5','6','7','8','9','0','A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z',',','-',' ','_']
 
-ser = serial.Serial('COM5',115200,timeout=1)
+    print("CTRL+c to quit")
 
-not_accepted_chars = ['b', 'n', '\\', 'r', "'"]
+    while 1:
+        line2 = ''
+        line = str(ser.readline())
+        for x in range(0,len(line)):
+            if line[x] in accepted_chars:
+                line2 = line2 + line[x]
+        file.write(str(line2))
+        file.write("\n\r")
+        #print(line2)
 
-
-   
-while 1:
-    line2 = ''
-    line = str(ser.readline())
-    for x in range(0,len(line)):
-        if line[x] in not_accepted_chars:
-            line2 = line2
-        else:
-            line2 = line2 + str(line[x])
-    file.write(str(line2))
-    file.write("\n\r")
-    print(line2)
-
-#except:
-file.close()
-ser.close()
+except:
+    file.close()
+    ser.close()
