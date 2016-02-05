@@ -1,5 +1,9 @@
 #! /usr/bin/python
-
+#this sketch logs data to a csv file
+#it takes care of cleaning out special characters and adding new lines
+#however data must be sent over serial in csv format
+#also I am having issues with encoding special characters so I am only leting
+#CAPITAL letters, numbers, and comma's through
 import serial
 import sys
 import datetime
